@@ -50,14 +50,83 @@ public class SistemaApicola {
         // TODO: Permitir volver al menú principal
     }
 
-    public static void asignarApicultorAColmena() {
-        // TODO: Mostrar lista de colmenas
-        // TODO: Mostrar lista de apicultores
-        // TODO: Permitir seleccionar ambos
-        // TODO: Validar que el apicultor no esté ya asignado
-        // TODO: Asignar apicultor a la colmena
-        // TODO: Confirmar asignación
+    //codigo de la colmena necesario para el codigo del apicultor 
+    package Clases.Principales;
+
+    public class Apicultor {
+        private String nombre;
+        private String telefono;
+        private int edad;
+        private int experiencia;
+        private String direccion;
+        private String identificacion;
+
+    public Apicultor(String nombre, String telefono, int edad, int experiencia, String direccion, String identificacion) {
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.edad = edad;
+        this.experiencia = experiencia;
+        this.direccion = direccion;
+        this.identificacion = identificacion;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+    }
+
+    //codigo de apicultor
+    public static void asignarApicultorAColmena() {
+    List<Colmena> colmenas = datosApicola.getListaColmenas();
+    List<Apicultor> apicultores = datosApicola.getListaApicultores();
+
+    if (colmenas.isEmpty() || apicultores.isEmpty()) {
+        System.out.println(" Debe haber al menos una colmena y un apicultor registrados.");
+        return;
+    }
+
+    
+    System.out.println("🔸 Colmenas disponibles:");
+    for (int i = 0; i < colmenas.size(); i++) {
+        Colmena c = colmenas.get(i);
+        String asignado = (c.getApicultorAsignado() == null) ? "Sin asignar" : "Asignado a " + c.getApicultorAsignado().getNombre();
+        System.out.println((i + 1) + ". ID: " + c.getId() + " | " + asignado);
+    }
+    int colmenaIndex = Utils.solicitarEntero("Seleccione una colmena por número: ") - 1;
+
+    if (colmenaIndex < 0 || colmenaIndex >= colmenas.size()) {
+        System.out.println(" Índice de colmena inválido.");
+        return;
+    }
+
+   
+    System.out.println("🔹 Apicultores disponibles:");
+    for (int i = 0; i < apicultores.size(); i++) {
+        Apicultor a = apicultores.get(i);
+        System.out.println((i + 1) + ". " + a.getNombre() + " (ID: " + a.getIdentificacion() + ")");
+    }
+    int apicultorIndex = Utils.solicitarEntero("Seleccione un apicultor por número: ") - 1;
+
+    if (apicultorIndex < 0 || apicultorIndex >= apicultores.size()) {
+        System.out.println(" Índice de apicultor inválido.");
+        return;
+    }
+
+    Colmena colmenaSeleccionada = colmenas.get(colmenaIndex);
+    if (colmenaSeleccionada.getApicultorAsignado() != null) {
+        System.out.println(" Esta colmena ya tiene un apicultor asignado.");
+        return;
+    }
+
+    Apicultor apicultorSeleccionado = apicultores.get(apicultorIndex);
+    colmenaSeleccionada.setApicultorAsignado(apicultorSeleccionado);
+
+    System.out.println(" Apicultor asignado correctamente a la colmena.");
+}
 
     public static void editarInformacion() {
         // TODO: Mostrar submenú: ¿qué desea editar? (colmena, apicultor, abeja reina, inspección)
